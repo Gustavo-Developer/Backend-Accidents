@@ -17,3 +17,12 @@ model Client {
 
   @@map("clients")
 }
+
+model Accident {
+  id String @id @default(uuid())
+  plate String 
+  involved String
+  how String 
+
+  @@map("accidents")
+}

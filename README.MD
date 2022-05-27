@@ -29,6 +29,9 @@ acidente.
 # Rodar aplicação
 $ npm run dev
 
+# Rodar Migrates
+$ npx prisma migrate dev
+
 # Rodar o Banco de Dados Online com o Prisma
 $ npx prisma studio
 

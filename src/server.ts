@@ -1,4 +1,5 @@
 import express from "express";
+import { accidentRouter } from "./modules/accident/routes";
 import { clientRouter } from "./modules/client/routes";
 
 const app = express();
@@ -6,5 +7,7 @@ const app = express();
 app.use(express.json());
 
 app.use("/client",clientRouter);
+app.use("/accident",accidentRouter);
+
 
 app.listen(3000, () => console.log("Server in Running"))
