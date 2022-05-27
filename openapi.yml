@@ -1,0 +1,505 @@
+openapi: 3.0.1
+info:
+  title: API de ocorrências.
+  description: API para cadastro e obtenção de acidentes/ocorrências.
+  version: 1.0.0
+servers:
+  - url: "https://localhost:8080/accidents/v1"
+    description: "Servidor local"
+tags:
+  - name: Criação de Clientes
+  - name: Listagem de Clientes
+  - name: Criação de Acidentes
+  - name: Alteração de Acidentes
+paths:
+  "/client":
+    post:
+      tags:
+        - Criação de Clientes
+      summary: Obtenção dos eventos de acidentes daquele cliente
+      operationId: postClient
+      requestBody:
+        description: postar informações de dados do cliente.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestPostClient"
+      responses:
+        "200":
+          $ref: "#/components/responses/OKResponsePostClient"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+        default:
+          $ref: "#/components/responses/OKResponsePostClient"
+  "/client/{idClient}":
+    get:
+      tags:
+        - Listagem de Clientes
+      summary: Obtenção do cliente e dos seus eventos de acidentes vinculados
+      operationId: getClientById
+      parameters:
+        - $ref: "#/components/parameters/idClient"
+      responses:
+        "200":
+          $ref: "#/components/responses/OKResponseGetClientById"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+        default:
+          $ref: "#/components/responses/OKResponseGetClientById"
+  "/client/{idClient}/accident":
+    post:
+      tags:
+        - Criação de Acidentes
+      summary: Obtenção do cliente e dos seus eventos de acidentes vinculados
+      operationId: postAccident
+      parameters:
+        - $ref: "#/components/parameters/idClient"
+      requestBody:
+        description: postar informações de dados do cliente.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestPostAccident"
+      responses:
+        "200":
+          $ref: "#/components/responses/OKResponsePostAccident"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+        default:
+          $ref: "#/components/responses/OKResponsePostAccident"
+  "/client/{idClient}/accident/{idAccident}":
+    put:
+      tags:
+        - Alteração de Acidentes
+      summary: Alteração daquele cliente
+      operationId: putAccident
+      parameters:
+        - $ref: "#/components/parameters/idClient"
+        - $ref: "#/components/parameters/idAccident"
+      requestBody:
+        description: postar informações de dados do cliente.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestPutAccident"
+      responses:
+        "200":
+          $ref: "#/components/responses/OKResponsePutAccident"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+        default:
+          $ref: "#/components/responses/OKResponsePutAccident"
+
+components:
+  schemas:
+    #POST - Client
+    RequestPostClient:
+      type: object
+      additionalProperties: false
+      properties:
+        id_fiscal:
+          description: Código Identificação.
+          type: string
+          nullable: false
+          minLength: 11
+          maxLength: 14
+          pattern: "^[0-9]{11,14}$"
+          example: "12312312312"
+        nome_pessoa:
+          type: string
+          nullable: true
+          description: Nome da pessoa.
+          minLength: 3
+          maxLength: 255
+          example: José da Silva Xavier
+        data_nascimento:
+          type: string
+          nullable: false
+          format: date
+          pattern: '^(\d{4})-((0?[1-9])|(1[0-2]))-((0?[1-9])|([12]\d)|(3[01]))$'
+          minLength: 8
+          maxLength: 10
+          description: Data de nascimento.
+          example: "1980-01-20"
+    ResponsePostClient:
+      type: object
+      additionalProperties: false
+      required:
+        - idClient
+      properties:
+        idClient:
+          type: string
+          pattern: "[a-zA-Z0-9][a-zA-Z0-9]{1,99}$"
+          description: GUID de identificação da pessoa.
+          maxLength: 100
+          example: f350f6a064083a9646e28e7f1cd544b3
+
+    #GET - Client
+    ResponseGetClient:
+      type: object
+      additionalProperties: false
+      properties:
+        idClient:
+          description: Identificador unico da pessoa.
+          type: string
+          pattern: "^[a-zA-Z0-9][a-zA-Z0-9]{1,99}$"
+          maxLength: 100
+          example: f350f6a064083a9646e28e7f1cd544b3
+        id_fiscal:
+          description: Código Identificação.
+          type: string
+          nullable: false
+          minLength: 11
+          maxLength: 14
+          pattern: "^[0-9]{11,14}$"
+          example: "12312312312"
+        nome_pessoa:
+          type: string
+          nullable: true
+          description: Nome da pessoa.
+          minLength: 3
+          maxLength: 255
+          example: José da Silva Xavier
+        data_nascimento:
+          type: string
+          nullable: false
+          format: date
+          pattern: '^(\d{4})-((0?[1-9])|(1[0-2]))-((0?[1-9])|([12]\d)|(3[01]))$'
+          minLength: 8
+          maxLength: 10
+          description: Data de nascimento.
+          example: "1980-01-20"
+        accidents:
+          type: object
+          additionalProperties: false
+          properties:
+            idAccident:
+              type: string
+              pattern: "[a-zA-Z0-9][a-zA-Z0-9]{1,99}$"
+              description: GUID de identificação da pessoa.
+              maxLength: 100
+              example: f350f6a064083a9646e28e7f1cd544b3
+            veiculo_placa:
+              type: string
+              nullable: false
+              pattern: '^[a-zA-Z0-9\-]{10}$'
+              minLength: 4
+              maxLength: 10
+              description: Pais de nascimento.
+              example: PIU-6469
+            endereco:
+              type: object
+              additionalProperties: false
+              required:
+                - pais
+                - uf
+                - municipio
+                - logradouro
+              properties:
+                pais:
+                  type: string
+                  nullable: true
+                  pattern: "^[a-zA-Z]{2,3}$"
+                  minLength: 3
+                  maxLength: 3
+                  description: Pais de nascimento.
+                  example: BRA
+                uf:
+                  type: string
+                  pattern: "^[a-zA-Z]{1,2}$"
+                  nullable: true
+                  minLength: 2
+                  maxLength: 2
+                  description: UF de nascimento.
+                  example: SP
+                municipio:
+                  type: string
+                  description: Municipio de nascimento.
+                  nullable: true
+                  minLength: 2
+                  maxLength: 50
+                  example: Campinas
+                logradouro:
+                  type: string
+                  description: Logradouro.
+                  nullable: true
+                  minLength: 2
+                  maxLength: 50
+                  example: Rua General Paquet, 69
+
+    #POST - Accident
+    RequestPostAccident:
+      type: object
+      additionalProperties: false
+      properties:
+        veiculo_placa:
+          type: string
+          nullable: false
+          pattern: '^[a-zA-Z0-9\-]{10}$'
+          minLength: 4
+          maxLength: 10
+          description: Pais de nascimento.
+          example: PIU-6469
+        endereco:
+          type: object
+          additionalProperties: false
+          required:
+            - pais
+            - uf
+            - municipio
+            - logradouro
+          properties:
+            pais:
+              type: string
+              nullable: true
+              pattern: "^[a-zA-Z]{2,3}$"
+              minLength: 3
+              maxLength: 3
+              description: Pais de nascimento.
+              example: BRA
+            uf:
+              type: string
+              pattern: "^[a-zA-Z]{1,2}$"
+              nullable: true
+              minLength: 2
+              maxLength: 2
+              description: UF de nascimento.
+              example: SP
+            municipio:
+              type: string
+              description: Municipio de nascimento.
+              nullable: true
+              minLength: 2
+              maxLength: 50
+              example: Campinas
+            logradouro:
+              type: string
+              description: Logradouro.
+              nullable: true
+              minLength: 2
+              maxLength: 50
+              example: Rua General Paquet, 69
+    ResponsePostAccident:
+      type: object
+      additionalProperties: false
+      required:
+        - idAccident
+      properties:
+        idAccident:
+          type: string
+          pattern: "[a-zA-Z0-9][a-zA-Z0-9]{1,99}$"
+          description: GUID de do acidente.
+          maxLength: 100
+          example: f350f6a064083a9646e28e7f1cd544b3
+
+    #PUT - Accident
+    RequestPutAccident:
+      type: object
+      additionalProperties: false
+      required:
+        - veiculo_placa
+        - endereco
+      properties:
+        veiculo_placa:
+          type: string
+          nullable: false
+          pattern: '^[a-zA-Z0-9\-]{10}$'
+          minLength: 4
+          maxLength: 10
+          description: Pais de nascimento.
+          example: PIU-6469
+        endereco:
+          type: object
+          additionalProperties: false
+          required:
+            - pais
+            - uf
+            - municipio
+            - logradouro
+          properties:
+            pais:
+              type: string
+              nullable: true
+              pattern: "^[a-zA-Z]{3}$"
+              minLength: 3
+              maxLength: 3
+              description: Pais de nascimento.
+              example: BRA
+            uf:
+              type: string
+              pattern: "^[a-zA-Z]{1,2}$"
+              nullable: true
+              minLength: 2
+              maxLength: 2
+              description: UF de nascimento.
+              example: SP
+            municipio:
+              type: string
+              description: Municipio de nascimento.
+              nullable: true
+              minLength: 2
+              maxLength: 50
+              example: Campinas
+            logradouro:
+              type: string
+              description: Logradouro.
+              nullable: true
+              minLength: 2
+              maxLength: 50
+              example: Rua General Paquet, 69
+    ResponsePutAccident:
+      type: object
+      additionalProperties: false
+      required:
+        - idAccident
+      properties:
+        idAccident:
+          type: string
+          pattern: "[a-zA-Z0-9][a-zA-Z0-9]{1,99}$"
+          description: GUID de identificação da pessoa.
+          maxLength: 100
+          example: f350f6a064083a9646e28e7f1cd544b3
+
+    #ERROR
+    ResponseError:
+      type: object
+      additionalProperties: false
+      required:
+        - correlationId
+        - fault
+      properties:
+        correlationId:
+          description: Código de identificação da request
+          type: string
+          maxLength: 255
+        fault:
+          type: object
+          additionalProperties: false
+          required:
+            - code
+            - type
+            - message
+          properties:
+            code:
+              description: Código de erro específico do endpoint
+              type: string
+              maxLength: 255
+            type:
+              description: Título legível por humanos deste erro específico
+              type: string
+              maxLength: 255
+            message:
+              description: Descrição legível por humanos deste erro específico
+              type: string
+              maxLength: 2048
+
+  parameters:
+    idClient:
+      name: idClient
+      in: path
+      description: Identificador unico da pessoa.
+      required: true
+      schema:
+        type: string
+        pattern: "^[a-zA-Z0-9][a-zA-Z0-9]{1,99}$"
+        maxLength: 100
+    idAccident:
+      name: idAccident
+      in: path
+      description: Identificador unico do Acidente.
+      required: true
+      schema:
+        type: string
+        pattern: "^[a-zA-Z0-9][a-zA-Z0-9]{1,99}$"
+        maxLength: 100
+
+  responses:
+    OKResponsePostClient:
+      description: Requisição foi bem sucedida, devolvendo as informações do cliente;
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ResponsePostClient"
+    OKResponseGetClientById:
+      description: Requisição foi bem sucedida, devolvendo as informações do cliente;
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ResponseGetClient"
+    OKResponsePutAccident:
+      description: Requisição foi bem sucedida, devolvendo as informações do cliente;
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ResponsePutAccident"
+    OKResponsePostAccident:
+      description: Requisição foi bem sucedida, devolvendo as informações do cliente;
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ResponsePostAccident"
+
+    BadRequest:
+      description: >-
+        A requisição foi malformada, omitindo atributos obrigatórios, seja no
+        payload ou através de atributos na URL.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ResponseError"
+    InternalServerError:
+      description: Ocorreu um erro interno no microsserviço
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ResponseError"
+    MethodNotAllowed:
+      description: O consumidor tentou acessar o recurso com um método não suportado
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ResponseError"
+    NotFound:
+      description: O recurso solicitado não existe ou não foi implementado
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ResponseError"
+    ServiceUnavailable:
+      description: Servidor temporariamente indisponível
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ResponseError"
