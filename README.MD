@@ -36,3 +36,16 @@ $ npx prisma migrate dev
 $ npx prisma studio
 
 ```
+
+
+**FALTA FAZER**
+
+[] Editar clientes
+[] Excluir clientes
+[] Listar todos os clientes
+
+[] Listar todos os acidentes
+
+[] Subir banco de dados Online
+
+[] Subir Swagger

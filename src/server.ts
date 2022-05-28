@@ -6,8 +6,11 @@ const app = express();
 
 app.use(express.json());
 
-app.use("/client",clientRouter);
-app.use("/accident",accidentRouter);
+app.use("/clients", clientRouter);
+app.use("/accident", accidentRouter);
+
+
+
 
 
 app.listen(3000, () => console.log("Server in Running"))
